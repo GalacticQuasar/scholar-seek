@@ -11,8 +11,9 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [savedText, setSavedText] = useState("");
+  const [responseText, setResponseText] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!inputText.trim()) {
       setError(true);
@@ -21,11 +22,35 @@ export default function Home() {
     setError(false);
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-      setSavedText(inputText);
-      console.log(inputText);
-    }, 1500);
+    try {
+      const response = await fetch('/api/sendoff', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ inputText }),
+      });
+
+      if (response.ok) {
+        const result = await response.text();
+        setResponseText(result);
+        console.log('Success:', result);
+      } else {
+        console.error('Failed to send text');
+      }
+    } catch (error) {
+      console.error('Error sending text:', error);
+    }
+
+    setLoading(false);
+
+    setSavedText(inputText);
+
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   setSavedText(inputText);
+    //   console.log(inputText);
+    // }, 1500);
   };
 
   return (
@@ -34,9 +59,9 @@ export default function Home() {
         <div className="max-w-3xl mx-auto space-y-8">
           <div className="text-center space-y-2">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <BookOpen className="h-8 w-8 text-[#9c8f6e]" />
+              <BookOpen className="h-8 w-8 mr-2 text-[#9c8f6e]" />
               <h1 className="text-4xl font-serif font-bold text-[#D4B88C]">
-                ScholarSeek
+                Scholar Seek
               </h1>
             </div>
             <p className="text-[#A8A8A8] text-lg max-w-2xl mx-auto">
@@ -63,7 +88,7 @@ export default function Home() {
                   type="submit"
                   size="lg"
                   disabled={loading || !inputText.trim()}
-                  className="transition-all duration-200 ease-in-out bg-[#9c8f6e] hover:bg-[#D4B88C] text-black dark:text-white rounded-xl"
+                  className="w-1/4 transition-all duration-200 ease-in-out bg-[#9c8f6e] hover:bg-[#D4B88C] text-black dark:text-white rounded-xl"
                 >
                   {loading ? (
                     <>
@@ -72,7 +97,7 @@ export default function Home() {
                     </>
                   ) : (
                     <>
-                      <Search className="mr-2 h-5 w-5" />
+                      <Search className="mr-0 h-5 w-5" />
                       Find Research
                     </>
                   )}
@@ -85,6 +110,12 @@ export default function Home() {
             <Card className="p-4 bg-[#3e474f] border border-[#9c8f6e] rounded-xl text-white">
               <h2 className="text-lg font-semibold text-[#D4B88C]">Saved Text:</h2>
               <p className="text-[#A8A8A8]">{savedText}</p>
+            </Card>
+          )}
+          {responseText && (
+            <Card className="p-4 bg-[#3e474f] border border-[#9c8f6e] rounded-xl text-white">
+              <h2 className="text-lg font-semibold text-[#D4B88C]">LLM RESPONSE:</h2>
+              <p className="text-[#A8A8A8]">{responseText}</p>
             </Card>
           )}
         </div>

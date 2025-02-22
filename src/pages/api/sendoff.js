@@ -9,5 +9,5 @@ export default async function handler(req, res) {
     const result = await model.generateContent(prompt);
     console.log(result.response.text());
 
-    res.status(200).json({ generated: result });
+    res.status(200).json(result.response.text());
 }
