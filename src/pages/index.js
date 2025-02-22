@@ -45,12 +45,6 @@ export default function Home() {
     setLoading(false);
 
     setSavedText(inputText);
-
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setSavedText(inputText);
-    //   console.log(inputText);
-    // }, 1500);
   };
 
   return (
