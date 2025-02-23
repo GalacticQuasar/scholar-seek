@@ -23,6 +23,8 @@ export default function Home() {
   const [displayedArticles, setDisplayedArticles] = useState([]); // Stores articles to display one by one
   const [articleIndex, setArticleIndex] = useState(0); // Tracks which article to show next
   const [keywords, setKeywords] = useState([])
+  const [paperSummaries, setPaperSummaries] = useState({});
+
 
   // Effect for displaying keywords one by one
   useEffect(() => {
@@ -120,10 +122,11 @@ export default function Home() {
     }
   
 
-    let paperScraped;
+    let paperSummary = "This is a temp summary of the article";
     console.log("Calling /api/searchpapers");
 
     try {
+      const newSummaries = { ...paperSummaries }; // Copy previous summaries
       for (let i = 0; i < articles.results.length; i++) {
         const response = await fetch('/api/searchpapers', {
           method: 'POST',
@@ -134,18 +137,19 @@ export default function Home() {
         });
     
         if (response.ok) {
-          paperScraped = await response.json();
-          console.log('Success:', paperScraped);
+          //paperSummary = await response.json();
+          console.log('Success:', paperSummary);
+          newSummaries[articles.results[i].title] = paperSummary;
         } else {
           console.error('Failed to send article:', articles.results[i]);
         }
       }
+      setPaperSummaries(newSummaries);
     } catch (error) {
       console.error('Error sending articles:', error);
     }; 
   };
 
-  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#2b2f3d] to-[#1e222d] dark:text-gray-300">
@@ -219,15 +223,16 @@ export default function Home() {
               {/* Article Titles Section */}
               {displayedArticles.length > 0 && (
                 <div className="mt-8 space-y-4">
-                  <h3 className="text-lg font-semibold text-[#D4B88C]">
-                    Related Articles:
-                  </h3>
+                  <h3 className="text-lg font-semibold text-[#D4B88C]">Related Articles:</h3>
                   {displayedArticles.map((article, index) => (
                     <div
                       key={index}
                       className="animate-fade-in-up bg-[#2d353d] p-4 rounded-lg border border-[#9c8f6e] hover:border-[#D4B88C] transition-all duration-200"
                     >
-                      <p className="text-[#A8A8A8]">{article.title}</p>
+                      <p className="text-[#A8A8A8] font-semibold">{article.title}</p>
+                      {paperSummaries[article.title] && (
+                        <p className="text-[#A8A8A8] mt-2">{paperSummaries[article.title]}</p>
+                      )}
                       {article.downloadUrl && (
                         <a
                           href={article.downloadUrl}
