@@ -74,53 +74,48 @@ export default function Home() {
 
     let keywordString;
 
-    let count = 0;
+    try {
+      const response = await fetch('/api/sendoff', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ inputText }),
+      });
+
+      if (response.ok) {
+        keywordString = await response.json();
+        keywordString = keywordString.substring(0, keywordString.lastIndexOf(" ")).replace(/[^A-Za-z\s]/g, '');
+        setResponseText(keywordString);
+      } else {
+        console.error('Failed to send text');
+      }
+    } catch (error) {
+      console.error('Error sending text:', error);
+    }
+
+    setLoading(false);
+
     let articles;
-    do {
-      try {
-        const response = await fetch('/api/sendoff', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ inputText }),
-        });
   
-        if (response.ok) {
-          keywordString = await response.json();
-          keywordString = keywordString.substring(0, keywordString.lastIndexOf(" ")).replace(/[^A-Za-z\s]/g, '');
-          setResponseText(keywordString);
-        } else {
-          console.error('Failed to send text');
-        }
-      } catch (error) {
-        console.error('Error sending text:', error);
+    try {
+      const response = await fetch('/api/keywordsearch', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ keywordString }),
+      });
+
+      if (response.ok) {
+        articles = await response.json();
+        setArticles(articles);
+      } else {
+        console.error('Failed to send keywords');
       }
-  
-      setLoading(false);
-    
-      try {
-        const response = await fetch('/api/keywordsearch', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ keywordString }),
-        });
-  
-        if (response.ok) {
-          articles = await response.json();
-          setArticles(articles);
-        } else {
-          console.error('Failed to send keywords');
-        }
-      } catch (error) {
-        console.error('Error sending keywords:', error);
-      }
-      count += 1;
-    } while (count < 2);
-  
-    let paperSummary;
+    } catch (error) {
+      console.error('Error sending keywords:', error);
+    }
 
     try {    
       for (let i = 0; i < articles.results.length; i++) {
