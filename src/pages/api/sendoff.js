@@ -22,7 +22,7 @@ export default async function handler(req, res) {
 
     const prompt = 
         req.body.inputText + 
-        "\n Given this research paper draft, give me a list of specific keywords that would best describe the paper.\n" + 
+        "\n Given this research paper draft, give me a list of around 5 specific keywords that would best describe the paper.\n" + 
         "If input is not a research paper, RETURN AN EMPTY LIST: [].";
 
     const result = await model.generateContent(prompt);
