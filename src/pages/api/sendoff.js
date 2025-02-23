@@ -22,9 +22,7 @@ export default async function handler(req, res) {
     const prompt = 
         req.body.inputText + 
         "\nGiven this research paper draft, extract around 5 to 7 specific single words, not acronyms that best describe the paper. \n" + 
-        "- Only return the keywords, separated by spaces\n"
-        "- Do NOT include explanations or extra text.\n"
-        "- If the input is not a research paper, return exactly this: []"
+        "If the input is not a research paper, return an empty list: []";
 
     const result = await model.generateContent(prompt);
     console.log(result.response.text());
