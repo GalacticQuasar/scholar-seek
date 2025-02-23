@@ -1,10 +1,10 @@
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { BookOpen, Search, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { marked } from 'marked';
+import Head from "next/head"
 
 marked.setOptions({
   breaks: true,
@@ -162,13 +162,31 @@ export default function Home() {
     }      
   };
 
+  function Separator({ color = "#D4B88C", height = "2px" }) {
+    return (
+      <hr
+        style={{
+          backgroundColor: color,
+          height: height,
+          border: "none",
+          borderRadius: "5px",
+          margin: "10px 0",
+          transition: "all 0.3s ease",
+        }}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#2b2f3d] to-[#1e222d] dark:text-gray-300">
+      <Head>
+        <title>Scholar Seek</title>
+      </Head>
       <main className="container mx-auto p-4 py-8 md:py-12">
         <div className="max-w-3xl mx-auto space-y-8">
           <div className="text-center space-y-2">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <BookOpen className="h-8 w-8 mr-2 text-[#9c8f6e]" />
+              <BookOpen className="h-8 w-8 mr-2 text-[#D4B88C]" />
               <h1 className="text-4xl font-serif font-bold text-[#D4B88C]">
                 Scholar Seek
               </h1>
@@ -240,7 +258,8 @@ export default function Home() {
                       key={index}
                       className="animate-fade-in-up bg-[#2d353d] p-4 rounded-lg border border-[#9c8f6e] hover:border-[#D4B88C] transition-all duration-200"
                     >
-                      <p className="text-[#A8A8A8] font-semibold">{article.title}</p>
+                      <p className="text-xl text-[#A8A8A8] font-semibold">{article.title}</p>
+                      <Separator color="#D4B88C" height="2px" />
                       {paperSummaries[article.title] && (
                         <p className="text-[#A8A8A8] mt-2" 
                             dangerouslySetInnerHTML={{ 
@@ -267,6 +286,9 @@ export default function Home() {
         </div>
       </main>
       <style jsx global>{`
+        * {
+          font-family: 'Georgia', Times, serif;
+        }
         @keyframes fade-in-up {
           0% {
             opacity: 0;
