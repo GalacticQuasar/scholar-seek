@@ -137,7 +137,7 @@ export default function Home() {
           paperScraped = await response.json();
           console.log('Success:', paperScraped);
         } else {
-          console.error('Failed to send article:', article);
+          console.error('Failed to send article:', articles.results[i]);
         }
       }
     } catch (error) {
