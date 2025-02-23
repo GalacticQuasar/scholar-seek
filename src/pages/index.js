@@ -249,7 +249,11 @@ export default function Home() {
                     >
                       <p className="text-[#A8A8A8] font-semibold">{article.title}</p>
                       {paperSummaries[article.title] && (
-                        <p className="text-[#A8A8A8] mt-2">{paperSummaries[article.title]}</p>
+                        <p className="text-[#A8A8A8] mt-2" 
+                            dangerouslySetInnerHTML={{ 
+                              __html: marked.parse(paperSummaries[article.title] || "") 
+                            }} 
+                        />                     
                       )}
                       {article.downloadUrl && (
                         <a
