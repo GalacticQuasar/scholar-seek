@@ -15,11 +15,15 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [responseText, setResponseText] = useState("");
-  const [displayedResponse, setDisplayedResponse] = useState("");
+  const [displayedResponse, setDisplayedResponse] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [articles, setArticles] = useState(null);
+  const [showArticles, setShowArticles] = useState(false); // Controls when articles start appearing
+  const [displayedArticles, setDisplayedArticles] = useState([]); // Stores articles to display one by one
+  const [articleIndex, setArticleIndex] = useState(0); // Tracks which article to show next
 
+  // Effect for displaying keywords one by one
   useEffect(() => {
     if (responseText) {
       const words = responseText.split(" ");
@@ -30,9 +34,24 @@ export default function Home() {
         }, 500); // Adjust word appearance speed here
 
         return () => clearTimeout(timeout);
+      } else {
+        // Keywords are fully loaded, start showing articles
+        setShowArticles(true);
       }
     }
   }, [currentIndex, responseText]);
+
+  // Effect for displaying articles one by one
+  useEffect(() => {
+    if (showArticles && articles?.results && articleIndex < articles.results.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedArticles(prev => [...prev, articles.results[articleIndex]]);
+        setArticleIndex(prev => prev + 1);
+      }, 500); // Adjust article appearance speed here
+
+      return () => clearTimeout(timeout);
+    }
+  }, [showArticles, articles, articleIndex]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,10 +63,13 @@ export default function Home() {
     setLoading(true);
     setHasSubmitted(true);
     setDisplayedResponse([]);
+    setDisplayedArticles([]); // Reset displayed articles
     setCurrentIndex(0);
+    setArticleIndex(0); // Reset article index
+    setShowArticles(false); // Hide articles until keywords are done
     setResponseText("");
 
-    console.log("Calling /api/sendoff")
+    console.log("Calling /api/sendoff");
     let keywordString;
 
     try {
@@ -72,7 +94,7 @@ export default function Home() {
 
     setLoading(false);
 
-    console.log("Calling /api/keywordsearch")
+    console.log("Calling /api/keywordsearch");
     let articles;
 
     try {
@@ -88,11 +110,6 @@ export default function Home() {
         articles = await response.json();
         setArticles(articles);
         console.log('Success:', articles);
-        for(let i = 0; i < articles.results.length; i++) {
-            console.log("Title: " + articles.results[i].title);
-            console.log("Download URL: " + articles.results[i].downloadUrl);
-            //extractTextFromPdf(data.results[i].downloadUrl, i + "output.txt");
-        }
       } else {
         console.error('Failed to send keywords');
       }
@@ -157,7 +174,7 @@ export default function Home() {
           {hasSubmitted && (
             <Card className="p-6 bg-[#3e474f] border border-[#9c8f6e] rounded-xl text-white space-y-4">
               <div className="text-lg font-semibold text-[#D4B88C]">
-                {loading ? "Finding keywords..." : "Research Insights:"}
+                {loading ? "Finding keywords..." : "Research Keywords:"}
               </div>
               <div className="text-[#A8A8A8] flex flex-wrap gap-2">
                 {displayedResponse.map((word, index) => (
@@ -169,6 +186,33 @@ export default function Home() {
                   </span>
                 ))}
               </div>
+
+              {/* Article Titles Section */}
+              {displayedArticles.length > 0 && (
+                <div className="mt-8 space-y-4">
+                  <h3 className="text-lg font-semibold text-[#D4B88C]">
+                    Related Articles:
+                  </h3>
+                  {displayedArticles.map((article, index) => (
+                    <div
+                      key={index}
+                      className="animate-fade-in-up bg-[#2d353d] p-4 rounded-lg border border-[#9c8f6e] hover:border-[#D4B88C] transition-all duration-200"
+                    >
+                      <p className="text-[#A8A8A8]">{article.title}</p>
+                      {article.downloadUrl && (
+                        <a
+                          href={article.downloadUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-2 inline-block text-[#D4B88C] hover:text-[#9c8f6e] transition-colors duration-200"
+                        >
+                          Download PDF
+                        </a>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </Card>
           )}
         </div>
