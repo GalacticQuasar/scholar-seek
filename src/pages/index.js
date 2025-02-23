@@ -307,6 +307,26 @@ export default function Home() {
           scroll-behavior: smooth;
         }
       `}</style>
+      <style jsx global>{`
+      /* Customize bold text to be golden */
+      strong, b {
+        color: #D4B88C; /* Golden color */
+      }
+
+      @keyframes fade-in-up {
+        0% {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fade-in-up 0.5s ease-out forwards;
+      }
+    `}</style>
     </div>
   );
 }
