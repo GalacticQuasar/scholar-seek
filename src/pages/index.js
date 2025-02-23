@@ -122,34 +122,41 @@ export default function Home() {
     }
   
 
-    let paperSummary = "This is a temp summary of the article";
+    let paperSummary;
     console.log("Calling /api/searchpapers");
 
     try {
       const newSummaries = { ...paperSummaries }; // Copy previous summaries
-      for (let i = 0; i < articles.results.length; i++) {
-        const response = await fetch('/api/searchpapers', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ downloadUrl: articles.results[i].downloadUrl }), 
-        });
     
-        if (response.ok) {
-          //paperSummary = await response.json();
-          console.log('Success:', paperSummary);
-          newSummaries[articles.results[i].title] = paperSummary;
-        } else {
-          console.error('Failed to send article:', articles.results[i]);
-        }
+      for (let i = 0; i < articles.results.length; i++) {
+        const article = articles.results[i];
+    
+        fetch('/api/searchpapers', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ downloadUrl: article.downloadUrl }),
+        })
+          .then(async (response) => {
+            if (!response.ok) {
+              throw new Error(`Failed to fetch summary for ${article.title}`);
+            }
+            const paperSummary = await response.json();
+            console.log('Success:', paperSummary);
+    
+            // Update state immediately as each summary arrives
+            setPaperSummaries((prevSummaries) => ({
+              ...prevSummaries,
+              [article.title]: paperSummary,
+            }));
+          })
+          .catch((error) => {
+            console.error('Error fetching article:', error);
+          });
       }
-      setPaperSummaries(newSummaries);
     } catch (error) {
       console.error('Error sending articles:', error);
-    }; 
+    }    
   };
-
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#2b2f3d] to-[#1e222d] dark:text-gray-300">
