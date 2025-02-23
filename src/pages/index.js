@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { BookOpen, Search, Loader2 } from "lucide-react";
@@ -7,11 +7,26 @@ import { Card } from "@/components/ui/card";
 
 export default function Home() {
   const [inputText, setInputText] = useState("");
-  const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [savedText, setSavedText] = useState("");
   const [responseText, setResponseText] = useState("");
+  const [displayedResponse, setDisplayedResponse] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (responseText) {
+      const words = responseText.split(" ");
+      if (currentIndex < words.length) {
+        const timeout = setTimeout(() => {
+          setDisplayedResponse(prev => [...prev, words[currentIndex]]);
+          setCurrentIndex(prev => prev + 1);
+        }, 500); // Adjust word appearance speed here
+
+        return () => clearTimeout(timeout);
+      }
+    }
+  }, [currentIndex, responseText]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,6 +36,10 @@ export default function Home() {
     }
     setError(false);
     setLoading(true);
+    setHasSubmitted(true);
+    setDisplayedResponse([]);
+    setCurrentIndex(0);
+    setResponseText("");
 
     try {
       const response = await fetch('/api/sendoff', {
@@ -32,9 +51,8 @@ export default function Home() {
       });
 
       if (response.ok) {
-        const result = await response.text();
+        const result = (await response.text());
         setResponseText(result);
-        console.log('Success:', result);
       } else {
         console.error('Failed to send text');
       }
@@ -43,8 +61,6 @@ export default function Home() {
     }
 
     setLoading(false);
-
-    setSavedText(inputText);
   };
 
   return (
@@ -74,7 +90,7 @@ export default function Home() {
               />
               {error && (
                 <div className="text-red-500 text-sm p-2 bg-red-50 dark:bg-red-950/50 rounded">
-                  hi
+                  Please enter some text before submitting
                 </div>
               )}
               <div className="flex justify-end">
@@ -100,20 +116,40 @@ export default function Home() {
             </form>
           </Card>
 
-          {savedText && (
-            <Card className="p-4 bg-[#3e474f] border border-[#9c8f6e] rounded-xl text-white">
-              <h2 className="text-lg font-semibold text-[#D4B88C]">Saved Text:</h2>
-              <p className="text-[#A8A8A8]">{savedText}</p>
-            </Card>
-          )}
-          {responseText && (
-            <Card className="p-4 bg-[#3e474f] border border-[#9c8f6e] rounded-xl text-white">
-              <h2 className="text-lg font-semibold text-[#D4B88C]">LLM RESPONSE:</h2>
-              <p className="text-[#A8A8A8]">{responseText}</p>
+          {hasSubmitted && (
+            <Card className="p-6 bg-[#3e474f] border border-[#9c8f6e] rounded-xl text-white space-y-4">
+              <div className="text-lg font-semibold text-[#D4B88C]">
+                {loading ? "Finding keywords..." : "Research Insights:"}
+              </div>
+              <div className="text-[#A8A8A8] flex flex-wrap gap-2">
+                {displayedResponse.map((word, index) => (
+                  <span 
+                    key={index}
+                    className="animate-fade-in-up inline-block bg-[#2d353d] px-3 py-1 rounded-full"
+                  >
+                    {word}
+                  </span>
+                ))}
+              </div>
             </Card>
           )}
         </div>
       </main>
+      <style jsx global>{`
+        @keyframes fade-in-up {
+          0% {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fade-in-up 0.5s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }
