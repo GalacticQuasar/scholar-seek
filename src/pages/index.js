@@ -118,7 +118,34 @@ export default function Home() {
     } catch (error) {
       console.error('Error sending keywords:', error);
     }
+  
+
+    let paperScraped;
+    console.log("Calling /api/searchpapers");
+
+    try {
+      for (let i = 0; i < articles.results.length; i++) {
+        const response = await fetch('/api/searchpapers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ downloadUrl: articles.results[i].downloadUrl }), 
+        });
+    
+        if (response.ok) {
+          paperScraped = await response.json();
+          console.log('Success:', paperScraped);
+        } else {
+          console.error('Failed to send article:', article);
+        }
+      }
+    } catch (error) {
+      console.error('Error sending articles:', error);
+    }; 
   };
+
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#2b2f3d] to-[#1e222d] dark:text-gray-300">
