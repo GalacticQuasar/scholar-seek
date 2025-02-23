@@ -33,8 +33,6 @@ import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
     const query = req.body.keywordString;
-    //const query = "machine unlearning CLIP stable diffusion privacy copyright"
-    //const query = "Machine, unlearning, CLIP, Stable Diffusion, privacy, gradient"
     console.log("KEYWORD STRING:", query);
     const limit = 5;
     const sort = 'relevance';
@@ -66,7 +64,7 @@ export default async function handler(req, res) {
         console.error("Error fetching data:", error);
     }
 
-    console.log(data);
+    //console.log(data);
 
     res.status(200).json(data)
 }

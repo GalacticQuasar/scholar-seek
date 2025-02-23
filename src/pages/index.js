@@ -22,6 +22,7 @@ export default function Home() {
   const [showArticles, setShowArticles] = useState(false); // Controls when articles start appearing
   const [displayedArticles, setDisplayedArticles] = useState([]); // Stores articles to display one by one
   const [articleIndex, setArticleIndex] = useState(0); // Tracks which article to show next
+  const [keywords, setKeywords] = useState([])
 
   // Effect for displaying keywords one by one
   useEffect(() => {
@@ -82,7 +83,8 @@ export default function Home() {
       });
 
       if (response.ok) {
-        keywordString = await response.text();
+        keywordString = await response.json();
+        console.log(keywordString);
         keywordString = keywordString.substring(0, keywordString.lastIndexOf(" ")).replace(/[^A-Za-z\s]/g, '');
         setResponseText(keywordString);
       } else {
