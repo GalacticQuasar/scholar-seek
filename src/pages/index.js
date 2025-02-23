@@ -4,6 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { BookOpen, Search, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { marked } from 'marked';
+
+marked.setOptions({
+  breaks: true,
+});
 
 export default function Home() {
   const [inputText, setInputText] = useState("");
@@ -136,7 +141,13 @@ export default function Home() {
           {responseText && (
             <Card className="p-4 bg-[#3e474f] border border-[#9c8f6e] rounded-xl text-white">
               <h2 className="text-lg font-semibold text-[#D4B88C]">LLM RESPONSE:</h2>
-              <p className="text-[#A8A8A8]">{responseText}</p>
+              <div
+                className="text-[#A8A8A8]"
+                style={{ whiteSpace: "pre-wrap" }}
+                dangerouslySetInnerHTML={{
+                  __html: marked.parse(responseText.replace(/\n/g, "  \n")),
+                }}
+              />
             </Card>
           )}
         </div>
