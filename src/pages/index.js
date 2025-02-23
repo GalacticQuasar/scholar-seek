@@ -150,8 +150,8 @@ export default function Home() {
               }));
     
               index++;
-              if (index >= words.length) clearInterval(interval); // Stop when done
-            }, 100); // Adjust speed of word appearance
+              if (index >= words.length - 1) clearInterval(interval); // Stop when done
+            }, 50); // Adjust speed of word appearance
           })
           .catch((error) => {
             console.error('Error fetching article:', error);
@@ -246,7 +246,7 @@ export default function Home() {
                             dangerouslySetInnerHTML={{ 
                               __html: marked.parse(paperSummaries[article.title] || "") 
                             }} 
-                        />                     
+                        />
                       )}
                       {article.downloadUrl && (
                         <a
