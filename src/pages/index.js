@@ -4,6 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { BookOpen, Search, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { marked } from 'marked';
+
+marked.setOptions({
+  breaks: true,
+});
 
 export default function Home() {
   const [inputText, setInputText] = useState("");
@@ -13,6 +18,7 @@ export default function Home() {
   const [displayedResponse, setDisplayedResponse] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [articles, setArticles] = useState(null);
 
   useEffect(() => {
     if (responseText) {
@@ -41,6 +47,9 @@ export default function Home() {
     setCurrentIndex(0);
     setResponseText("");
 
+    console.log("Calling /api/sendoff")
+    let keywordString;
+
     try {
       const response = await fetch('/api/sendoff', {
         method: 'POST',
@@ -51,8 +60,9 @@ export default function Home() {
       });
 
       if (response.ok) {
-        const result = (await response.text());
-        setResponseText(result);
+        keywordString = await response.text();
+        setResponseText(keywordString);
+        console.log('Success:', keywordString);
       } else {
         console.error('Failed to send text');
       }
@@ -61,6 +71,29 @@ export default function Home() {
     }
 
     setLoading(false);
+
+    console.log("Calling /api/keywordsearch")
+    let articles;
+
+    try {
+      const response = await fetch('/api/keywordsearch', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ keywordString }),
+      });
+
+      if (response.ok) {
+        articles = await response.json();
+        setArticles(articles);
+        console.log('Success:', articles);
+      } else {
+        console.error('Failed to send keywords');
+      }
+    } catch (error) {
+      console.error('Error sending keywords:', error);
+    }
   };
 
   return (
