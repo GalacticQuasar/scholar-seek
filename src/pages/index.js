@@ -12,6 +12,7 @@ export default function Home() {
   const [error, setError] = useState(false);
   const [savedText, setSavedText] = useState("");
   const [responseText, setResponseText] = useState("");
+  const [articles, setArticles] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,6 +22,9 @@ export default function Home() {
     }
     setError(false);
     setLoading(true);
+
+    console.log("Calling /api/sendoff")
+    let keywordString;
 
     try {
       const response = await fetch('/api/sendoff', {
@@ -32,9 +36,9 @@ export default function Home() {
       });
 
       if (response.ok) {
-        const result = await response.text();
-        setResponseText(result);
-        console.log('Success:', result);
+        keywordString = await response.text();
+        setResponseText(keywordString);
+        console.log('Success:', keywordString);
       } else {
         console.error('Failed to send text');
       }
@@ -43,6 +47,29 @@ export default function Home() {
     }
 
     setLoading(false);
+
+    console.log("Calling /api/keywordsearch")
+    let articles;
+
+    try {
+      const response = await fetch('/api/keywordsearch', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ keywordString }),
+      });
+
+      if (response.ok) {
+        articles = await response.json();
+        setArticles(articles);
+        console.log('Success:', articles);
+      } else {
+        console.error('Failed to send keywords');
+      }
+    } catch (error) {
+      console.error('Error sending keywords:', error);
+    }
 
     setSavedText(inputText);
   };
@@ -100,12 +127,12 @@ export default function Home() {
             </form>
           </Card>
 
-          {savedText && (
+          {/* {savedText && (
             <Card className="p-4 bg-[#3e474f] border border-[#9c8f6e] rounded-xl text-white">
               <h2 className="text-lg font-semibold text-[#D4B88C]">Saved Text:</h2>
               <p className="text-[#A8A8A8]">{savedText}</p>
             </Card>
-          )}
+          )} */}
           {responseText && (
             <Card className="p-4 bg-[#3e474f] border border-[#9c8f6e] rounded-xl text-white">
               <h2 className="text-lg font-semibold text-[#D4B88C]">LLM RESPONSE:</h2>
