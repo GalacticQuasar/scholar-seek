@@ -121,13 +121,10 @@ export default function Home() {
       console.error('Error sending keywords:', error);
     }
   
-
     let paperSummary;
     console.log("Calling /api/searchpapers");
 
-    try {
-      const newSummaries = { ...paperSummaries }; // Copy previous summaries
-    
+    try {    
       for (let i = 0; i < articles.results.length; i++) {
         const article = articles.results[i];
     
@@ -143,11 +140,20 @@ export default function Home() {
             const paperSummary = await response.json();
             console.log('Success:', paperSummary);
     
-            // Update state immediately as each summary arrives
-            setPaperSummaries((prevSummaries) => ({
-              ...prevSummaries,
-              [article.title]: paperSummary,
-            }));
+            // Split summary into words
+            const words = paperSummary.split(" ");
+            let index = 0;
+    
+            // Gradually update state word by word
+            const interval = setInterval(() => {
+              setPaperSummaries((prevSummaries) => ({
+                ...prevSummaries,
+                [article.title]: (prevSummaries[article.title] || "") + " " + words[index],
+              }));
+    
+              index++;
+              if (index >= words.length) clearInterval(interval); // Stop when done
+            }, 100); // Adjust speed of word appearance
           })
           .catch((error) => {
             console.error('Error fetching article:', error);
@@ -155,7 +161,7 @@ export default function Home() {
       }
     } catch (error) {
       console.error('Error sending articles:', error);
-    }    
+    }      
   };
 
   return (
