@@ -286,11 +286,14 @@ export default function Home() {
           height: 12px;
         }
 
+        textarea::-webkit-scrollbar-track {
+          border-radius: 10px;
+        }
+
         ::-webkit-scrollbar-corner {background-color: transparent;}
 
         ::-webkit-scrollbar-track {
           background: #2b2f3d; /* Dark background for the track */
-          border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb {
