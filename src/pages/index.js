@@ -187,7 +187,7 @@ export default function Home() {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="Enter your research topic or paste text here..."
-                className="min-h-[150px] text-lg bg-[#3e474f] text-white placeholder:text-[#a0a0a0] rounded-lg border-[#9c8f6e] focus:outline-none focus:ring-2 focus:ring-[#9c8f6e]"
+                className="min-h-[300px] text-lg bg-[#3e474f] text-white placeholder:text-[#a0a0a0] rounded-lg border-[#9c8f6e] focus:outline-none focus:ring-2 focus:ring-[#9c8f6e] resize-none"
               />
               {error && (
                 <div className="text-red-500 text-sm p-2 bg-red-50 dark:bg-red-950/50 rounded">
@@ -277,6 +277,35 @@ export default function Home() {
         }
         .animate-fade-in-up {
           animation: fade-in-up 0.5s ease-out forwards;
+        }
+      `}</style>
+      <style jsx global>{`
+        /* Customize scrollbar */
+        ::-webkit-scrollbar {
+          width: 18px;
+          height: 12px;
+        }
+
+        ::-webkit-scrollbar-corner {background-color: transparent;}
+
+        ::-webkit-scrollbar-track {
+          background: #2b2f3d; /* Dark background for the track */
+          border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: #9c8f6e; /* Gold color for the thumb */
+          border-radius: 10px;
+          border: 3px solid #1e222d; /* Darker border for contrast */
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: #D4B88C; /* Lighter gold when hovered */
+        }
+
+        /* Add smooth scrolling to the whole page */
+        html {
+          scroll-behavior: smooth;
         }
       `}</style>
     </div>
