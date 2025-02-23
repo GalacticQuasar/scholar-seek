@@ -25,8 +25,6 @@ export default async function handler(req, res) {
         // Extract text from PDF
         const pdfText = await extractTextFromPDF(pdfBuffer);
 
-        console.log("EXTRACTED TEXT FROM PDF");
-
         if (!pdfText.trim()) {
             throw new Error("Failed to extract text from PDF.");
         }

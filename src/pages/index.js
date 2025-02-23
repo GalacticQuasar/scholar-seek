@@ -130,11 +130,17 @@ export default function Home() {
             if (!response.ok) {
               throw new Error(`Failed to fetch summary for ${article.title}`);
             }
+           
             const paperSummary = await response.json();
-    
             // Split summary into words
             const words = paperSummary.split(" ");
-            let index = 0;
+
+            setPaperSummaries((prevSummaries) => ({
+              ...prevSummaries,
+              [article.title]: words[0], // Set the first word
+            }));
+            
+            let index = 1;
     
             // Gradually update state word by word
             const interval = setInterval(() => {
