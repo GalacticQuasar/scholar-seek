@@ -61,8 +61,8 @@ export default function Home() {
 
       if (response.ok) {
         keywordString = await response.text();
+        keywordString = keywordString.substring(0, keywordString.lastIndexOf(" ")).replace(/[^A-Za-z\s]/g, '');
         setResponseText(keywordString);
-        console.log('Success:', keywordString);
       } else {
         console.error('Failed to send text');
       }
@@ -88,6 +88,11 @@ export default function Home() {
         articles = await response.json();
         setArticles(articles);
         console.log('Success:', articles);
+        for(let i = 0; i < articles.results.length; i++) {
+            console.log("Title: " + articles.results[i].title);
+            console.log("Download URL: " + articles.results[i].downloadUrl);
+            //extractTextFromPdf(data.results[i].downloadUrl, i + "output.txt");
+        }
       } else {
         console.error('Failed to send keywords');
       }

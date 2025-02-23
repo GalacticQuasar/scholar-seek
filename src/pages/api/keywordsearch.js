@@ -32,12 +32,12 @@ import fetch from 'node-fetch';
 // }
 
 export default async function handler(req, res) {
-    const query = req.body.keywordString.substring(req.body.keywordString.length - 2).replace(/[^A-Za-z\s]/g, '');
+    const query = req.body.keywordString;
     //const query = "machine unlearning CLIP stable diffusion privacy copyright"
     //const query = "Machine, unlearning, CLIP, Stable Diffusion, privacy, gradient"
     console.log("KEYWORD STRING:", query);
     const limit = 5;
-    const sort = 'recency';
+    const sort = 'relevance';
 
     const url = `https://api.core.ac.uk/v3/search/works?q=${encodeURIComponent(query)}&limit=${limit}&sort=${sort}`;
 
