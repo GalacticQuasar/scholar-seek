@@ -72,13 +72,11 @@ export default function Home() {
     setShowArticles(false); // Hide articles until keywords are done
     setResponseText("");
 
-    console.log("Calling /api/sendoff");
     let keywordString;
 
     let count = 0;
     let articles;
     do {
-      console.log("DOING IT AGAIN ----------------------------------------\n\n------------------------------")
       try {
         const response = await fetch('/api/sendoff', {
           method: 'POST',
@@ -90,7 +88,6 @@ export default function Home() {
   
         if (response.ok) {
           keywordString = await response.json();
-          console.log(keywordString);
           keywordString = keywordString.substring(0, keywordString.lastIndexOf(" ")).replace(/[^A-Za-z\s]/g, '');
           setResponseText(keywordString);
         } else {
@@ -101,9 +98,7 @@ export default function Home() {
       }
   
       setLoading(false);
-  
-      console.log("Calling /api/keywordsearch");
-  
+    
       try {
         const response = await fetch('/api/keywordsearch', {
           method: 'POST',
@@ -116,7 +111,6 @@ export default function Home() {
         if (response.ok) {
           articles = await response.json();
           setArticles(articles);
-          console.log('Success:', articles);
         } else {
           console.error('Failed to send keywords');
         }
@@ -127,7 +121,6 @@ export default function Home() {
     } while (count < 2);
   
     let paperSummary;
-    console.log("Calling /api/searchpapers");
 
     try {    
       for (let i = 0; i < articles.results.length; i++) {
@@ -143,7 +136,6 @@ export default function Home() {
               throw new Error(`Failed to fetch summary for ${article.title}`);
             }
             const paperSummary = await response.json();
-            console.log('Success:', paperSummary);
     
             // Split summary into words
             const words = paperSummary.split(" ");

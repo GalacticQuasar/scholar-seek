@@ -20,6 +20,8 @@
     "motion": "^12.4.7",
     "next": "15.1.6",
     "node-fetch": "^3.3.2",
+    "pdf2json": "^3.1.5",
+    "pdfjs-dist": "^4.10.38",
     "pdfreader": "^3.0.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

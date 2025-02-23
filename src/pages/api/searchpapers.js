@@ -35,7 +35,6 @@ export default async function handler(req, res) {
         const prompt = pdfText + "\n\nSummarize the above article:";
         const result = await model.generateContent(prompt);
 
-        //console.log("SUMMARY OF ARTICLE:", result.response.text());
         console.log("DONE");
 
         res.status(200).json(result.response.text());

@@ -26,15 +26,9 @@ export default async function handler(req, res) {
 
         data = await response.json();
 
-        // for(let i = 0; i < data.results.length; i++) {
-        //     console.log("Download URL: " + data.results[i].downloadUrl);
-        //     extractTextFromPdf(data.results[i].downloadUrl, i + "output.txt");
-        // }
     } catch (error) {
         console.error("Error fetching data:", error);
     }
-
-    //console.log(data);
-
+    
     res.status(200).json(data)
 }
