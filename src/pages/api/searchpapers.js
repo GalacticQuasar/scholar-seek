@@ -20,8 +20,12 @@ export default async function handler(req, res) {
         const response = await axios.get(url, { responseType: 'arraybuffer' });
         const pdfBuffer = Buffer.from(response.data);
 
+        console.log("FETCHED PDF:", url)
+
         // Extract text from PDF
         const pdfText = await extractTextFromPDF(pdfBuffer);
+
+        console.log("EXTRACTED TEXT FROM PDF");
 
         if (!pdfText.trim()) {
             throw new Error("Failed to extract text from PDF.");
@@ -31,7 +35,8 @@ export default async function handler(req, res) {
         const prompt = pdfText + "\n\nSummarize the above article:";
         const result = await model.generateContent(prompt);
 
-        console.log("SUMMARY OF ARTICLE:", result.response.text());
+        //console.log("SUMMARY OF ARTICLE:", result.response.text());
+        console.log("DONE");
 
         res.status(200).json(result.response.text());
     } catch (error) {

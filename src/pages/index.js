@@ -75,51 +75,56 @@ export default function Home() {
     console.log("Calling /api/sendoff");
     let keywordString;
 
-    try {
-      const response = await fetch('/api/sendoff', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ inputText }),
-      });
-
-      if (response.ok) {
-        keywordString = await response.json();
-        console.log(keywordString);
-        keywordString = keywordString.substring(0, keywordString.lastIndexOf(" ")).replace(/[^A-Za-z\s]/g, '');
-        setResponseText(keywordString);
-      } else {
-        console.error('Failed to send text');
-      }
-    } catch (error) {
-      console.error('Error sending text:', error);
-    }
-
-    setLoading(false);
-
-    console.log("Calling /api/keywordsearch");
+    let count = 0;
     let articles;
-
-    try {
-      const response = await fetch('/api/keywordsearch', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ keywordString }),
-      });
-
-      if (response.ok) {
-        articles = await response.json();
-        setArticles(articles);
-        console.log('Success:', articles);
-      } else {
-        console.error('Failed to send keywords');
+    do {
+      console.log("DOING IT AGAIN ----------------------------------------\n\n------------------------------")
+      try {
+        const response = await fetch('/api/sendoff', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ inputText }),
+        });
+  
+        if (response.ok) {
+          keywordString = await response.json();
+          console.log(keywordString);
+          keywordString = keywordString.substring(0, keywordString.lastIndexOf(" ")).replace(/[^A-Za-z\s]/g, '');
+          setResponseText(keywordString);
+        } else {
+          console.error('Failed to send text');
+        }
+      } catch (error) {
+        console.error('Error sending text:', error);
       }
-    } catch (error) {
-      console.error('Error sending keywords:', error);
-    }
+  
+      setLoading(false);
+  
+      console.log("Calling /api/keywordsearch");
+  
+      try {
+        const response = await fetch('/api/keywordsearch', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ keywordString }),
+        });
+  
+        if (response.ok) {
+          articles = await response.json();
+          setArticles(articles);
+          console.log('Success:', articles);
+        } else {
+          console.error('Failed to send keywords');
+        }
+      } catch (error) {
+        console.error('Error sending keywords:', error);
+      }
+      count += 1;
+    } while (count < 2);
   
     let paperSummary;
     console.log("Calling /api/searchpapers");

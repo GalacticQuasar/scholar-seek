@@ -20,6 +20,7 @@ export default async function handler(req, res) {
         });
 
         if (!response.ok) {
+            res.status(500).send('CORE Fetch Error')
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
