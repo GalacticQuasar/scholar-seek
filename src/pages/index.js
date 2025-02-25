@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { BookOpen, Search, Loader2 } from "lucide-react";
+import { BookOpen, Search, Loader2, Info } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { marked } from 'marked';
 import Head from "next/head"
@@ -24,6 +24,7 @@ export default function Home() {
   const [articleIndex, setArticleIndex] = useState(0); // Tracks which article to show next
   const [keywords, setKeywords] = useState([])
   const [paperSummaries, setPaperSummaries] = useState({});
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
 
   // Effect for displaying keywords one by one
@@ -285,6 +286,67 @@ export default function Home() {
           )}
         </div>
       </main>
+      {/* Developer Info Button */}
+      <button
+        onClick={() => setIsPopupVisible(!isPopupVisible)}
+        className="fixed bottom-4 left-4 bg-[#9c8f6e] hover:bg-[#D4B88C] text-black dark:text-white rounded-full p-3 shadow-lg transition-all duration-200 ease-in-out"
+      >
+        <Info className="h-6 w-6" />
+      </button>
+
+      {/* Developer Info Popup */}
+      {isPopupVisible && (
+        <div className="fixed bottom-20 left-4 bg-[#3e474f] border border-[#9c8f6e] rounded-lg p-4 shadow-lg text-white">
+          <h3 className="text-lg font-semibold text-[#D4B88C]">Developers:</h3>
+          <ul className="mt-2 space-y-2">
+            <li className="flex items-center gap-2">
+              <a
+                href="https://github.com/GalacticQuasar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#A8A8A8] hover:text-[#D4B88C] transition-colors"
+              >
+                <img
+                  src="/github-mark-white.svg"
+                  alt="GitHub"
+                  className="h-5 w-5"
+                />
+              </a>
+              <span>Akash Ravandhu</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <a
+                href="https://github.com/DevashishDas3"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#A8A8A8] hover:text-[#D4B88C] transition-colors"
+              >
+                <img
+                  src="/github-mark-white.svg"
+                  alt="GitHub"
+                  className="h-5 w-5"
+                />
+              </a>
+              <span>Devasish Das</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <a
+                href="https://github.com/ObviAvi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#A8A8A8] hover:text-[#D4B88C] transition-colors"
+              >
+                <img
+                  src="/github-mark-white.svg"
+                  alt="GitHub"
+                  className="h-5 w-5"
+                />
+              </a>
+              <span>Avi Aggarwal</span>
+            </li>
+          </ul>
+        </div>
+      )}
       <style jsx global>{`
         * {
           font-family: 'Georgia', Times, serif;
