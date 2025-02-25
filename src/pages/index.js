@@ -289,15 +289,19 @@ export default function Home() {
       {/* Developer Info Button */}
       <button
         onClick={() => setIsPopupVisible(!isPopupVisible)}
-        className="fixed bottom-4 left-4 bg-[#9c8f6e] hover:bg-[#D4B88C] text-black dark:text-white rounded-full p-3 shadow-lg transition-all duration-200 ease-in-out"
+        className="fixed bottom-6 left-6 bg-[#9c8f6e] hover:bg-[#D4B88C] text-black dark:text-white rounded-full p-3 shadow-lg transition-all duration-200 ease-in-out"
       >
         <Info className="h-6 w-6" />
       </button>
 
       {/* Developer Info Popup */}
-      {isPopupVisible && (
-        <div className="fixed bottom-20 left-4 bg-[#3e474f] border border-[#9c8f6e] rounded-lg p-4 shadow-lg text-white">
-          <h3 className="text-lg font-semibold text-[#D4B88C]">Developers:</h3>
+      <div
+        className={`fixed bottom-20 mb-5 left-6 bg-[#3e474f] border border-[#9c8f6e] rounded-lg p-4 shadow-lg text-white transition-opacity duration-150 ${
+          isPopupVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+      >
+          <h3 className="text-lg font-semibold text-center text-[#D4B88C]">Developers</h3>
+          <Separator color="#D4B88C" height="2px" />
           <ul className="mt-2 space-y-2">
             <li className="flex items-center gap-2">
               <a
@@ -346,7 +350,6 @@ export default function Home() {
             </li>
           </ul>
         </div>
-      )}
       <style jsx global>{`
         * {
           font-family: 'Georgia', Times, serif;
