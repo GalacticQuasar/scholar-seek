@@ -1,6 +1,8 @@
 # Scholar Seek
 <img width="951" alt="scholar-seek-showcase" src="https://github.com/user-attachments/assets/a805ac71-f6d1-4f6c-b064-8edea65cfc98" />
 
+## Try it out at [scholar-seek.vercel.app](https://scholar-seek.vercel.app/)
+
 ## Inspiration
 Our inspiration for this project was to address the issue of expanding on and continuing to write research paper drafts. However, we also had ScholarSeek in mind as an educational tool. We figured that if a researcher were given a few of the most relevant papers to their paper draft, they would be able to cite these papers and thus build on the ideas of these papers. Educationally, ScholarSeek allows regular people to explore other research papers related to the one they recently read or were intrigued by. Though we recognize that there are other resources to use for this such as other LLMs, our project aims to share relevant, recent, and accurate papers.
 
