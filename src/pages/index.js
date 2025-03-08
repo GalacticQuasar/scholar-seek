@@ -269,7 +269,18 @@ export default function Home() {
                       key={index}
                       className="animate-fade-in-up bg-[#2d353d] p-4 rounded-lg border border-[#9c8f6e] hover:border-[#D4B88C] transition-all duration-200 article-card"
                     >
-                      <p className="text-xl text-[#A8A8A8] font-semibold">{article.title}</p>
+                      {article.downloadUrl ? (
+                        <a
+                          href={article.downloadUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xl text-[#D4B88C] font-semibold cursor-pointer block underline decoration-transparent hover:decoration-[#D4B88C] transition-colors duration-250"
+                        >
+                          {article.title}
+                        </a>
+                      ) : (
+                        <p className="text-xl text-[#D4B88C] font-semibold">{article.title}</p>
+                      )}
                       <Separator color="#D4B88C" height="2px" />
                       {paperSummaries[article.title] && (
                         <div>
@@ -295,16 +306,6 @@ export default function Home() {
                             {expandedArticles[article.title] ? 'Show Less' : 'Show More'}
                           </button>
                         </div>
-                      )}
-                      {article.downloadUrl && (
-                        <a
-                          href={article.downloadUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-2 inline-block text-[#D4B88C] hover:text-[#9c8f6e] border-[1.1px] border-[#D4B88C] px-4 py-2 rounded-xl text-center transition-all duration-300 hover:bg-[#D4B88C] hover:text-black"
-                        >
-                          PDF Link
-                        </a>
                       )}
                     </div>
                   ))}
