@@ -25,6 +25,7 @@ export default function Home() {
   const [keywords, setKeywords] = useState([])
   const [paperSummaries, setPaperSummaries] = useState({});
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [expandedArticles, setExpandedArticles] = useState({});
 
 
   // Effect for displaying keywords one by one
@@ -271,11 +272,29 @@ export default function Home() {
                       <p className="text-xl text-[#A8A8A8] font-semibold">{article.title}</p>
                       <Separator color="#D4B88C" height="2px" />
                       {paperSummaries[article.title] && (
-                        <p className="text-[#A8A8A8] mt-2" 
-                            dangerouslySetInnerHTML={{ 
+                        <div>
+                          <div 
+                            className={`text-[#A8A8A8] mt-2 overflow-hidden transition-all duration-300 relative ${
+                              !expandedArticles[article.title] ? 'max-h-[150px]' : 'max-h-[1000px]'
+                            }`}
+                          >
+                            <div dangerouslySetInnerHTML={{ 
                               __html: marked.parse(paperSummaries[article.title] || "") 
-                            }} 
-                        />
+                            }} />
+                            {!expandedArticles[article.title] && (
+                              <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#2d353d] to-transparent" />
+                            )}
+                          </div>
+                          <button
+                            onClick={() => setExpandedArticles(prev => ({
+                              ...prev,
+                              [article.title]: !prev[article.title]
+                            }))}
+                            className="mt-2 text-[#D4B88C] hover:text-[#9c8f6e] transition-colors px-3 py-1 rounded-md border border-[#D4B88C] hover:bg-[#D4B88C] hover:text-black text-sm"
+                          >
+                            {expandedArticles[article.title] ? 'Show Less' : 'Show More'}
+                          </button>
+                        </div>
                       )}
                       {article.downloadUrl && (
                         <a
