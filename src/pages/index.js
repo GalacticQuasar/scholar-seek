@@ -51,6 +51,15 @@ export default function Home() {
       const timeout = setTimeout(() => {
         setDisplayedArticles(prev => [...prev, articles.results[articleIndex]]);
         setArticleIndex(prev => prev + 1);
+        
+        // Scroll to the newly added article
+        setTimeout(() => {
+          const articles = document.querySelectorAll('.article-card');
+          if (articles.length > 0) {
+            const lastArticle = articles[articles.length - 1];
+            lastArticle.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100); // Small delay to ensure the DOM has updated
       }, 500); // Adjust article appearance speed here
 
       return () => clearTimeout(timeout);
@@ -193,7 +202,7 @@ export default function Home() {
               </h1>
             </div>
             <p className="text-[#A8A8A8] text-lg max-w-2xl mx-auto">
-              Enter your research topic or text, and I’ll find relevant academic
+              Enter your research topic or text, and I'll find relevant academic
               papers and insights. Your scholarly journey begins here.
             </p>
           </div>
@@ -257,7 +266,7 @@ export default function Home() {
                   {displayedArticles.map((article, index) => (
                     <div
                       key={index}
-                      className="animate-fade-in-up bg-[#2d353d] p-4 rounded-lg border border-[#9c8f6e] hover:border-[#D4B88C] transition-all duration-200"
+                      className="animate-fade-in-up bg-[#2d353d] p-4 rounded-lg border border-[#9c8f6e] hover:border-[#D4B88C] transition-all duration-200 article-card"
                     >
                       <p className="text-xl text-[#A8A8A8] font-semibold">{article.title}</p>
                       <Separator color="#D4B88C" height="2px" />
