@@ -284,7 +284,7 @@ export default function Home() {
                           rel="noopener noreferrer"
                           className="mt-2 inline-block text-[#D4B88C] hover:text-[#9c8f6e] border-[1.1px] border-[#D4B88C] px-4 py-2 rounded-xl text-center transition-all duration-300 hover:bg-[#D4B88C] hover:text-black"
                         >
-                          Download PDF
+                          PDF Link
                         </a>
                       )}
                     </div>
