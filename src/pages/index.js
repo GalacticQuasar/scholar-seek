@@ -360,7 +360,7 @@ export default function Home() {
                   className="h-5 w-5"
                 />
               </a>
-              <span>Devasish Das</span>
+              <span>Devashish Das</span>
             </li>
             <li className="flex items-center gap-2">
               <a
